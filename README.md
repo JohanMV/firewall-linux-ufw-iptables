@@ -143,7 +143,8 @@ Estableceremos las reglas mínimas para que la máquina solo permita conexiones 
 * Activar el firewall UFW y verificar el estado
 
 
-<p align="center">
-  <img src="./Evidencias/Figura_2 - Aplicar politicas personalizadas.png" alt="Aplicar politicas personalizadas" style="display: inline-block; width: 49%; margin-right: 1%;" />
-  <img src="./Evidencias/Figura_3 - Activar el Firewall y verificar el estado.png" alt="Activar el Firewall y verificar el estado" style="display: inline-block; width: 49%; margin-right: 1%;" />
-</p>
+
+
+
+
+<img src="./Evidencias/Figura_2 - Aplicar politicas y activar el Firewall.png" alt="Aplicar politicas y activar el Firewall" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;"/> 
