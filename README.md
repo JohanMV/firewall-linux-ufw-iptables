@@ -64,9 +64,9 @@ The report documents the firewall behavior under various conditions, evidences t
   <tbody>
     <tr>
       <td>1️⃣</td>
-      <td>Verificar conectividad de red</td>
-      <td>ping, ifconfig, nmap</td>
-      <td>Confirmar que la máquina está activa y accesible</td>
+      <td>Verificar el estado inicial de red y firewall</td>
+      <td>ifconfig, ss -tulnp, ufw status, iptables -L</td>
+      <td>Confirmar que la interfaz de red está activa, detectar servicios en escucha y validar que no existen reglas previas activas</td>
     </tr>
     <tr>
       <td>2️⃣</td>
@@ -100,3 +100,50 @@ The report documents the firewall behavior under various conditions, evidences t
     </tr>
   </tbody>
 </table>
+
+---
+
+<h3>1️⃣ Verificar el estado inicial de red y firewall</h3>
+
+---
+
+En este primer paso nos aseguramos que el entorno esté limpio y funcional antes de aplicar reglas de firewall. 
+
+<img src="./Evidencias/Figura_1 - Verificar el estado inicial de red y firewall.png" alt="Verificar el estado inicial de red y firewall" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;"/> 
+
+<br>
+De esta forma garantizamos que cualquier bloqueo posterior sea atribuible únicamente a las reglas que aplicaremos y no a configuraciones residuales.
+
+<br> 
+
+<pre>La máquina tenga una IP válida (verificado con ifconfig)</pre>
+
+<pre> No existan servicios inesperados abiertos (ss -tulnp)</pre>
+
+<pre>El firewall UFW esté inactivo (ufw status)</pre>
+
+<pre>No haya reglas previas en IPTables (iptables -L)</pre>
+
+
+
+<h3>2️⃣ Aplicar políticas predeterminadas y permitir servicios esenciales</h3>
+
+---
+
+Estableceremos las reglas mínimas para que la máquina solo permita conexiones salientes y bloquee cualquier intento de conexión entrante no autorizado. Esto es una medida base recomendada por los CIS Benchmarks para servidores.
+
+🎯 El objetivo será: 
+
+* Bloquear todo el tráfico entrante por defecto (deny incoming)
+
+* Permitir todo el tráfico saliente (allow outgoing)
+
+* Habilitar el acceso por SSH (puerto 22) para administración remota (opcional)
+
+* Activar el firewall UFW y verificar el estado
+
+
+<p align="center">
+  <img src="./Evidencias/Figura_2 - Aplicar politicas personalizadas.png" alt="Aplicar politicas personalizadas" style="display: inline-block; width: 49%; margin-right: 1%;" />
+  <img src="./Evidencias/Figura_3 - Activar el Firewall y verificar el estado.png" alt="Activar el Firewall y verificar el estado" style="display: inline-block; width: 49%; margin-right: 1%;" />
+</p>
