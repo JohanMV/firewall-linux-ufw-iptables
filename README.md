@@ -266,3 +266,38 @@ Para complementar la revisión, se utilizó Gufw, la interfaz gráfica de UFW, p
 <p align="center">
   <img src="./Evidencias/Figura_10 - UFW 3.png" alt="Figura 10 - UFW 3" width="600" />
 </p>
+
+
+<h3>6️⃣ Documentar configuraciones y recomendaciones</h3>
+
+---
+
+En esta última etapa se recopila toda la evidencia generada a lo largo del proyecto para producir un informe técnico claro, estructurado y alineado con buenas prácticas de ciberseguridad.
+
+El objetivo es que cualquier profesional de TI o auditor pueda comprender fácilmente qué configuraciones se aplicaron, cómo se comportó el firewall ante intentos de escaneo o acceso no autorizado, y qué medidas se recomiendan para entornos reales.
+
+### 📌 Evidencia recopilada:
+
+- Capturas de pantalla de reglas configuradas (UFW e IPTables)
+- Escaneos realizados con `nmap` y resultados bloqueados
+- Registros generados por `dmesg` y GUI de Gufw
+
+### ✅ Buenas prácticas aplicadas (alineadas a CIS Benchmarks):
+
+- Bloqueo de todas las conexiones entrantes por defecto
+- Permisos explícitos solo a servicios esenciales como SSH
+- Registro de eventos y análisis de paquetes ICMP y escaneos
+- Refuerzo de políticas con IPTables para control detallado de puertos y direcciones IP
+
+### 💡 Recomendaciones finales:
+
+- Activar el monitoreo continuo de logs (`ufw logging on`)
+- Aplicar reglas más estrictas en redes productivas (permitir solo IPs confiables)
+- Integrar alertas automáticas ante eventos de DROP o BLOCK repetidos
+- Evaluar la adopción de herramientas como `fail2ban` o `suricata` para detección temprana
+
+> Este informe sirve como referencia para configurar firewalls en entornos Linux, reforzando la seguridad perimetral incluso en escenarios simulados de red.
+
+---
+
+🛡️ Proyecto completo y validado: **Firewall Personalizado con UFW + IPTables**
