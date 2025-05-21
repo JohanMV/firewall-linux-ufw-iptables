@@ -142,9 +142,124 @@ Estableceremos las reglas mínimas para que la máquina solo permita conexiones 
 
 * Activar el firewall UFW y verificar el estado
 
+<img src="./Evidencias/Figura_2 - Aplicar politicas y activar el Firewall.png" alt="Aplicar politicas y activar el Firewall" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;"/> <br> 
+
+Resultado esperado:
+
+    🔒 Todo tráfico entrante no autorizado es bloqueado por defecto.
+
+    ✅ El tráfico saliente (como actualizaciones del sistema) se mantiene habilitado.
+
+    🔓 El puerto 22/tcp queda accesible para conexiones SSH (seguridad remota).
+
+    📊 El estado del firewall se puede verificar con ufw status verbose.
+
+🛡️ En este paso sentamos la base de una política de mínimo privilegio, recomendada por los **CIS Brenchmarks (Control 9.1)**.
+
+<h3>3️⃣ Crear reglas personalizadas para proteger el sistema</h3>
+
+---
+
+Ahora fortaleceremos la seguridad más allá de las políticas generales de UFW, aplicando reglas directas en IPTables para controlar con precisión el tráfico basado en protocolos, puertos, y direcciones IP.
+
+🔸 3.1 Establecer políticas predeterminadas
+
+    sudo iptables -P INPUT DROP
+    sudo iptables -P FORWARD DROP
+    sudo iptables -P OUTPUT ACCEPT
+
+🔸 3.2 Permitir tráfico legítimo y conexiones establecidas
+
+    sudo iptables -A INPUT -i lo -j ACCEPT
+    sudo iptables -A INPUT -m conntrack --ctstate ESTABLISHED,RELATED -j ACCEPT
 
 
+<img src="./Evidencias/Figura_3 - Reglas iptables 1.png" alt=" Reglas iptables" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;"/> 
+<br> 
+
+Primero implementamos un enfoque "default deny" y luego evita bloqueos innecesarios y mantiene la funcionalidad normal del sistema sin exponer puertos.
+
+🔸 3.3 Definir reglas explícitas de filtrado
+
+    sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT       # Permitir SSH
+    sudo iptables -A INPUT -p tcp --dport 23 -j DROP         # Bloquear Telnet
+    sudo iptables -A INPUT -s 203.0.113.45 -j DROP           # Bloquear IP específica
+
+<img src="./Evidencias/Firewall_4 - Reglas iptables 2.png" alt="Reglas iptables 2" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;"/> <br> 
+
+Estas reglas personalizadas permiten construir una política de defensa efectiva, basada en el principio de mínimo privilegio.
+
+<h3>4️⃣ Simular escaneos y validar bloqueos </h3>
+
+---
+
+En esta etapa realizamos pruebas de escaneo contra el Firewall configurado con reglas iptables, desde un host externo (máquina física con Windows) utilizando Zenmap (Nmap GUI).
+
+El objetivo fue validar que los servicios no autorizados (puertos no permitidos explícitamente) estén correctamente bloqueados por el firewall.
+
+    nmap -sS -p- 192.168.0.106
+    nmap -sV -p22,23,80 192.168.0.106
 
 
+🔐 Resultado esperado
 
-<img src="./Evidencias/Figura_2 - Aplicar politicas y activar el Firewall.png" alt="Aplicar politicas y activar el Firewall" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;"/> 
+    Puerto 22 (SSH): Permitido
+
+    Puerto 23 (Telnet): Bloqueado
+
+    Puerto 80 (HTTP): Bloqueado
+
+    Todos los demás puertos: Bloqueados
+
+<img src="./Evidencias/Figura_5 - Ataque Nmap Windows 1.png" alt="Ataque Nmap Windows 1" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;"/> <br> 
+
+<img src="./Evidencias/Figura_6 - Ataque Nmap Windows 2.png" alt="Ataque Nmap Windows 2" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;"/> <br> 
+
+Donde <code>192.168.0.106</code> corresponde a la dirección IP de la máquina con iptables activo (Kali Linux en VirtualBox).
+
+✅ Resultados
+
+* El escaneo con -p- (todos los puertos) no detectó ningún puerto abierto, lo que demuestra que las políticas DROP en iptables están funcionando correctamente.
+
+* El escaneo dirigido a puertos 22, 23 y 80 solo detectó el puerto 22 como abierto, cumpliendo con la regla de permitir SSH y bloquear Telnet y HTTP.
+
+* Se demostró resistencia a técnicas básicas de reconocimiento pasivo y activo.
+
+<h3>5️⃣ Revisar registros del sistema y ajustar reglas si es necesario</h3>
+
+---
+
+En este paso se valida que los eventos sospechosos (intentos de conexión, escaneos, paquetes ICMP, etc.) estén siendo registrados por el sistema y el firewall. Esta fase es clave para detectar actividad no autorizada y afinar las reglas establecidas previamente.
+
+Se activó el registro del firewall con:
+
+```bash
+sudo ufw logging on
+```
+
+Y se visualizaron eventos bloqueados con:
+```
+sudo dmesg | grep "IN="
+```
+
+<img src="./Evidencias/Figura_7 - UFW.png" alt="UFW" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;"/> <br> 
+
+
+<h4>📊 Validación visual con Gufw</h4> 
+
+Para complementar la revisión, se utilizó Gufw, la interfaz gráfica de UFW, permitiendo visualizar:
+
+  * Las reglas permitidas (puerto 22/tcp habilitado)
+
+  * Reportes de actividad de red
+
+  * Historial de activación del firewall
+
+  <img src="./Evidencias/Figura_8 - UFW 1.png" alt="UFW 1" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;" />
+<br>
+
+<img src="./Evidencias/Figura_9 - UFW 2.png" alt="UFW 2" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;" />
+<br>
+
+<img src="./Evidencias/Figura_10 - UFW 3.png" alt="UFW 3" style="width: 100%; height: auto; border: 1px solid #444; border-radius: 8px;" />
+<br>
