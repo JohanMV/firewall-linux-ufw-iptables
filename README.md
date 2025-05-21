@@ -255,10 +255,14 @@ Para complementar la revisión, se utilizó Gufw, la interfaz gráfica de UFW, p
 
   * Historial de activación del firewall
 
-<div align="center">
-  <img src="./Evidencias/Figura_8 - UFW 1.png" alt="Figura 8 - UFW 1" style="width: 60%; margin-bottom: 16px; border: 1px solid #444; border-radius: 8px;" />
-  
-  <img src="./Evidencias/Figura_9 - UFW 2.png" alt="Figura 9 - UFW 2" style="width: 60%; margin-bottom: 16px; border: 1px solid #444; border-radius: 8px;" />
-  
-  <img src="./Evidencias/Figura_10 - UFW 3.png" alt="Figura 10 - UFW 3" style="width: 60%; border: 1px solid #444; border-radius: 8px;" />
-</div>
+<p align="center">
+  <img src="./Evidencias/Figura_8 - UFW 1.png" alt="Figura 8 - UFW 1" width="600" />
+</p>
+
+<p align="center">
+  <img src="./Evidencias/Figura_9 - UFW 2.png" alt="Figura 9 - UFW 2" width="600" />
+</p>
+
+<p align="center">
+  <img src="./Evidencias/Figura_10 - UFW 3.png" alt="Figura 10 - UFW 3" width="600" />
+</p>
